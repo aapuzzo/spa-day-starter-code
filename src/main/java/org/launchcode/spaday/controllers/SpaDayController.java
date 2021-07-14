@@ -27,7 +27,7 @@ public class SpaDayController {
     @GetMapping(value="")
     @ResponseBody
     public String customerForm () {
-        String html = "<form method = 'post'>" +
+        String html = "<form method = 'post' action ='results'>" +
                 "Name: <br>" +
                 "<input type = 'text' name = 'name'>" +
                 "<br>Skin type: <br>" +
@@ -41,15 +41,18 @@ public class SpaDayController {
                 "<select name = 'manipedi'>" +
                 "<option value = 'manicure'>Manicure</option>" +
                 "<option value = 'pedicure'>Pedicure</option>" +
+                "<option value = 'mani&#8725;pedi'>Manicure and Pedicure</option>" +
                 "</select><br>" +
                 "<input type = 'submit' value = 'Submit'>" +
                 "</form>";
         return html;
     }
 
-    @PostMapping(value="")
+    @PostMapping(value="results")
     public String spaMenu(@RequestParam String name, @RequestParam String skintype, @RequestParam String manipedi, Model model) {
-
+        model.addAttribute("name", name);
+        model.addAttribute("skintype", skintype);
+        model.addAttribute("manipedi", manipedi);
         ArrayList<String> facials = new ArrayList<>();
         facials.add("Microdermabrasion");
         facials.add("Hydrofacial");
@@ -57,6 +60,7 @@ public class SpaDayController {
         facials.add("Enzyme Peel");
 
         ArrayList<String> appropriateFacials = new ArrayList<>();
+        model.addAttribute("appropriateFacials", appropriateFacials);
         for (int i = 0; i < facials.size(); i ++) {
             if (checkSkinType(skintype,facials.get(i))) {
                 appropriateFacials.add(facials.get(i));
